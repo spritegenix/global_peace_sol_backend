@@ -21,7 +21,7 @@ const Header = () => {
                 <nav className="hidden md:flex items-center gap-8">
                     <Link className="text-sm font-semibold hover:text-primary transition-colors" to="/">Home</Link>
                     <Link className="text-sm font-semibold hover:text-primary transition-colors" to="/categories">Categories</Link>
-                    <Link className="text-sm font-semibold hover:text-primary transition-colors" to="/directory">Directory</Link>
+                    {user && <Link className="text-sm font-semibold hover:text-primary transition-colors" to="/directory">Directory</Link>}
                 </nav>
                 <div className="flex items-center gap-4">
                     {user ? (
@@ -34,6 +34,9 @@ const Header = () => {
                                     Admin Dashboard
                                 </Link>
                             )}
+                            <Link to="/profile" className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors group">
+                                <span className="material-symbols-outlined text-slate-600 dark:text-slate-400 group-hover:text-slate-900">person</span>
+                            </Link>
                             <button onClick={handleLogout} className="text-sm font-semibold text-slate-500 hover:text-slate-700 dark:hover:text-slate-300">
                                 Logout
                             </button>

@@ -51,6 +51,39 @@ const connectDB = async () => {
             });
             await Category.insertMany(cleanCategories);
             await Business.insertMany(cleanBusinesses);
+
+            // Seed default Ads
+            await Ad.insertMany([
+                {
+                    page: 'Home',
+                    title: 'Home Page Ad — Boost Your Visibility',
+                    description: 'Get your business featured on the Home Page and reach thousands of local customers.',
+                    media: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&auto=format&fit=crop&q=60',
+                    redirectLink: '/add-business'
+                },
+                {
+                    page: 'Categories',
+                    title: 'Categories Page Ad — Target the Right Users',
+                    description: 'Reach customers who are actively browsing categories looking for your services.',
+                    media: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=800&auto=format&fit=crop&q=60',
+                    redirectLink: '/add-business'
+                },
+                {
+                    page: 'Directory',
+                    title: 'Directory Page Ad — Free Business Listing',
+                    description: 'Join 50,000+ businesses already listed. Setup takes under 5 minutes.',
+                    media: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&auto=format&fit=crop&q=60',
+                    redirectLink: '/add-business'
+                },
+                {
+                    page: 'BusinessDetails',
+                    title: 'Business Details Ad — Reach Local Customers',
+                    description: 'Advertise right next to business profiles and capture high-intent users.',
+                    media: 'https://images.unsplash.com/photo-1620714223084-8fcacc2dfd4d?w=800&auto=format&fit=crop&q=60',
+                    redirectLink: '/add-business'
+                }
+            ]);
+
             console.log('In-memory database successfully seeded!');
         }
     } catch (err) {
@@ -124,11 +157,11 @@ app.get('/api/categories', async (req, res) => {
 
 app.get('/api/businesses', async (req, res) => {
     try {
-        const { category, featured, name, pincode, location } = req.query;
+        const { category, featured, name, pincode, location, owner } = req.query;
         let filter = {};
 
         if (category) {
-            filter.category = category;
+            filter.category = { $regex: category, $options: 'i' };
         }
 
         if (featured === 'true') {
@@ -145,6 +178,10 @@ app.get('/api/businesses', async (req, res) => {
 
         if (location) {
             filter.address = { $regex: location, $options: 'i' };
+        }
+
+        if (owner) {
+            filter.owner = owner;
         }
 
         const businessesList = await Business.find(filter);
@@ -181,6 +218,17 @@ app.post('/api/businesses', authMiddleware, async (req, res) => {
         const newBusiness = new Business(businessReq);
         await newBusiness.save();
 
+        // Check and auto-create category if doesn't exist
+        const existingCat = await Category.findOne({ name: { $regex: new RegExp(`^${businessReq.category}$`, 'i') } });
+        if (!existingCat) {
+            const newCat = new Category({
+                name: businessReq.category,
+                icon: 'category',
+                count: '1 Listing'
+            });
+            await newCat.save();
+        }
+
         res.status(201).json(newBusiness);
     } catch (err) {
         res.status(500).json({ error: 'Server error saving business' });
@@ -198,6 +246,20 @@ app.put('/api/businesses/:id', authMiddleware, async (req, res) => {
         }
 
         business = await Business.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
+
+        // Check and auto-create category if updated to a new one
+        if (req.body.category) {
+            const existingCat = await Category.findOne({ name: { $regex: new RegExp(`^${req.body.category}$`, 'i') } });
+            if (!existingCat) {
+                const newCat = new Category({
+                    name: req.body.category,
+                    icon: 'category',
+                    count: '1 Listing'
+                });
+                await newCat.save();
+            }
+        }
+
         res.json(business);
     } catch (err) {
         res.status(500).json({ error: 'Server error updating business' });
@@ -220,6 +282,47 @@ app.delete('/api/businesses/:id', authMiddleware, async (req, res) => {
     }
 });
 
+// --- Ads Routes ---
+app.get('/api/ads', async (req, res) => {
+    try {
+        const { page } = req.query;
+        const filter = page ? { page } : {};
+        const ads = await Ad.find(filter).sort({ createdAt: -1 });
+        res.json(ads);
+    } catch (err) {
+        res.status(500).json({ error: 'Server error fetching ads' });
+    }
+});
+
+app.post('/api/ads', [authMiddleware, adminMiddleware], async (req, res) => {
+    try {
+        const ad = new Ad(req.body);
+        await ad.save();
+        res.status(201).json(ad);
+    } catch (err) {
+        res.status(500).json({ error: 'Server error creating ad' });
+    }
+});
+
+app.put('/api/ads/:id', [authMiddleware, adminMiddleware], async (req, res) => {
+    try {
+        const ad = await Ad.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true });
+        if (!ad) return res.status(404).json({ message: 'Ad not found' });
+        res.json(ad);
+    } catch (err) {
+        res.status(500).json({ error: 'Server error updating ad' });
+    }
+});
+
+app.delete('/api/ads/:id', [authMiddleware, adminMiddleware], async (req, res) => {
+    try {
+        await Ad.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Ad removed' });
+    } catch (err) {
+        res.status(500).json({ error: 'Server error deleting ad' });
+    }
+});
+
 // --- Admin Routes ---
 app.get('/api/users', [authMiddleware, adminMiddleware], async (req, res) => {
     try {
@@ -227,6 +330,22 @@ app.get('/api/users', [authMiddleware, adminMiddleware], async (req, res) => {
         res.json(users);
     } catch (err) {
         res.status(500).send('Server error fetching users');
+    }
+});
+
+app.post('/api/users', [authMiddleware, adminMiddleware], async (req, res) => {
+    try {
+        const { name, email, password, role } = req.body;
+        let user = await User.findOne({ email });
+        if (user) return res.status(400).json({ message: 'User already exists' });
+
+        user = new User({ name, email, password, role: role || 'user' });
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(password, salt);
+        await user.save();
+        res.status(201).json(user);
+    } catch (err) {
+        res.status(500).send('Server error creating user');
     }
 });
 

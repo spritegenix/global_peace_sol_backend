@@ -9,6 +9,7 @@ import AddBusiness from './pages/AddBusiness';
 import EditBusiness from './pages/EditBusiness';
 import Auth from './pages/Auth';
 import AdminDashboard from './pages/AdminDashboard';
+import Profile from './pages/Profile';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 // Components
@@ -52,6 +53,11 @@ function App() {
                   <Route path="/edit-business/:id" element={
                     <PrivateRoute>
                       <EditBusiness />
+                    </PrivateRoute>
+                  } />
+                  <Route path="/profile" element={
+                    <PrivateRoute>
+                      <Profile />
                     </PrivateRoute>
                   } />
                   <Route path="/auth" element={<Auth />} />

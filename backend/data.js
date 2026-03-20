@@ -9,6 +9,15 @@ const categories = [
     { id: 6, icon: 'shopping_bag', name: 'Shopping', count: '1,850 businesses' },
     { id: 7, icon: 'nightlife', name: 'Nightlife', count: '245 businesses' },
     { id: 8, icon: 'school', name: 'Education', count: '112 businesses' },
+    { id: 9, icon: 'home', name: 'Real Estate', count: '520 businesses' },
+    { id: 10, icon: 'business_center', name: 'Professional Services', count: '1,240 businesses' },
+    { id: 11, icon: 'pets', name: 'Pets & Animals', count: '315 businesses' },
+    { id: 12, icon: 'hotel', name: 'Travel & Hotels', count: '420 businesses' },
+    { id: 13, icon: 'event', name: 'Events & Wedding', count: '430 businesses' },
+    { id: 14, icon: 'local_hospital', name: 'Hospitals', count: '150 businesses' },
+    { id: 15, icon: 'electric_bolt', name: 'Electricians', count: '280 businesses' },
+    { id: 16, icon: 'fitness_center', name: 'Gyms', count: '195 businesses' },
+    { id: 17, icon: 'content_cut', name: 'Salons', count: '410 businesses' },
 ];
 
 let businesses = [

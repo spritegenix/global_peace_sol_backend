@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { fetchApi } from '../utils/api';
@@ -7,8 +7,15 @@ const Auth = () => {
     const [isLogin, setIsLogin] = useState(true);
     const [formData, setFormData] = useState({ name: '', email: '', password: '' });
     const [error, setError] = useState('');
-    const { login } = useAuth();
+    const { user, login } = useAuth();
     const navigate = useNavigate();
+
+    // Redirect if already logged in
+    useEffect(() => {
+        if (user) {
+            navigate(user.role === 'admin' ? '/admin' : '/directory');
+        }
+    }, [user, navigate]);
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -66,18 +73,6 @@ const Auth = () => {
                         <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">{isLogin ? 'Welcome back' : 'Create an Account'}</h2>
                         <p className="text-slate-500 text-sm mt-1">{isLogin ? 'Access your personal directory and saved listings' : 'Join our community and list your business'}</p>
                         {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-                    </div>
-
-                    {/* Social Login */}
-                    <div className="grid grid-cols-2 gap-4 mb-8">
-                        <button className="flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-700 py-2.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all font-semibold">
-                            <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBbweXVuf8c4-maV6qkDfl3_u6nNzmYyGJhQmWBY2bTKmM9eT94TfCUxCR6rFdC_ZhowK6POaPs4OkErU2Xo1mpXK0obOV-AbIDCWj1r8wdtIU76FIZMiEm3ZZWsxuZyogoTbIcJmt-XP2NNCjYnfP1HJRXRf6QmI7rRzMyt8ytBo-CivIj2gzBFg9cEfUWzosWAHXc_jS3zbgiwf3XfllT3bfZsGrmjFcMn5WgVlIYHktP--2uhP-dyN67MvU588drdPOdPy1cUk" alt="Google" className="w-5 h-5" />
-                            <span className="text-sm font-medium">Google</span>
-                        </button>
-                        <button className="flex items-center justify-center gap-2 border border-slate-200 dark:border-slate-700 py-2.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-all font-semibold">
-                            <span className="material-symbols-outlined text-blue-600">social_leaderboard</span>
-                            <span className="text-sm font-medium">Facebook</span>
-                        </button>
                     </div>
 
                     <div className="relative mb-8">

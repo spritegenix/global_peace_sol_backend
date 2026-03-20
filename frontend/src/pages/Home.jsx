@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import AdBanner from '../components/AdBanner';
 
 const Home = () => {
+    const { user } = useAuth();
     const [featuredBusinesses, setFeaturedBusinesses] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -16,7 +18,7 @@ const Home = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch('http://localhost:5000/api/businesses?featured=true')
+        fetch('/api/businesses?featured=true')
             .then(res => res.json())
             .then(data => {
                 setFeaturedBusinesses(data);
@@ -40,7 +42,7 @@ const Home = () => {
             if (searchQuery.trim()) params.append('name', searchQuery.trim());
             if (locationQuery.trim()) params.append('location', locationQuery.trim());
 
-            const res = await fetch(`http://localhost:5000/api/businesses?${params.toString()}`);
+            const res = await fetch(`/api/businesses?${params.toString()}`);
             const data = await res.json();
             setSearchResults(data);
         } catch (err) {
@@ -69,9 +71,29 @@ const Home = () => {
                 <div className="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-slate-900/80 to-slate-900"></div>
                 <div className="relative z-10 w-full max-w-4xl text-center">
                     <h1 className="text-4xl font-black tracking-tight text-white sm:text-6xl">
-                        Find the Best <span className="text-primary">Local Services</span>
+                        {user ? (
+                            <>Welcome Back, <span className="text-primary italic">{user.name.split(' ')[0]}</span></>
+                        ) : (
+                            <>Find the Best <span className="text-primary">Local Services</span></>
+                        )}
                     </h1>
-                    <p className="mt-4 text-lg text-slate-300 sm:text-xl">Discover top-rated businesses and services near you in seconds.</p>
+                    <p className="mt-4 text-lg text-slate-300 sm:text-xl">
+                        {user
+                            ? "Good to see you again! Continue managing your listings or explore new services."
+                            : "Discover top-rated businesses and services near you in seconds."
+                        }
+                    </p>
+
+                    {user && (
+                        <div className="mt-8 flex flex-wrap justify-center gap-4">
+                            <Link to="/directory" className="bg-primary text-slate-900 px-8 py-3.5 rounded-2xl font-black text-sm hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/20">
+                                Explore Directory
+                            </Link>
+                            <Link to="/profile" className="bg-white/10 text-white backdrop-blur-md border border-white/20 px-8 py-3.5 rounded-2xl font-black text-sm hover:bg-white/20 transition-all">
+                                Go to My Profile
+                            </Link>
+                        </div>
+                    )}
                     <form onSubmit={handleSearch} className="mt-10 flex flex-col gap-4 rounded-xl bg-white p-2 shadow-2xl dark:bg-slate-800 md:flex-row">
                         {/* What field */}
                         <div className="flex flex-1 items-center gap-3 border-slate-200 px-4 py-2 dark:border-slate-700 md:border-r">
@@ -253,13 +275,13 @@ const Home = () => {
                             {[
                                 { icon: 'restaurant', name: 'Restaurants' },
                                 { icon: 'local_hospital', name: 'Hospitals' },
-                                { icon: 'hotel', name: 'Hotels' },
+                                { icon: 'hotel', name: 'Travel & Hotels' },
                                 { icon: 'electric_bolt', name: 'Electricians' },
                                 { icon: 'fitness_center', name: 'Gyms' },
                                 { icon: 'content_cut', name: 'Salons' },
-                                { icon: 'school', name: 'Schools' },
+                                { icon: 'school', name: 'Education' },
                             ].map((cat, i) => (
-                                <Link to="/directory" key={i} className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:border-primary hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
+                                <Link to={`/directory?category=${encodeURIComponent(cat.name)}`} key={i} className="flex flex-col items-center justify-center gap-4 rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:border-primary hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
                                     <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary/10 text-primary">
                                         <span className="material-symbols-outlined text-3xl">{cat.icon}</span>
                                     </div>

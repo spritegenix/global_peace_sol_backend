@@ -20,7 +20,7 @@ const BusinessDetails = () => {
             return;
         }
         setLoading(true);
-        fetch(`http://localhost:5000/api/businesses/${id}`)
+        fetch(`/api/businesses/${id}`)
             .then(res => {
                 if (!res.ok) throw new Error('Business not found');
                 return res.json();
@@ -75,39 +75,54 @@ const BusinessDetails = () => {
 
     return (
         <div className="flex-1 max-w-7xl mx-auto w-full px-4 md:px-10 py-6">
-            {/* Breadcrumbs */}
-            <nav className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-2 text-sm text-slate-500 flex-wrap">
-                    <Link to="/" className="hover:text-primary">Home</Link>
-                    <span className="material-symbols-outlined text-xs">chevron_right</span>
-                    <Link to="/directory" className="hover:text-primary">Directory</Link>
-                    {business.category && (
-                        <>
-                            <span className="material-symbols-outlined text-xs">chevron_right</span>
-                            <span className="text-primary font-semibold">{business.category}</span>
-                        </>
-                    )}
-                    <span className="material-symbols-outlined text-xs">chevron_right</span>
-                    <span className="text-slate-900 dark:text-slate-200 font-medium truncate max-w-[180px]">{business.name}</span>
-                </div>
-                {isAuthorized && (
-                    <div className="flex gap-2">
+            {/* Owner/Admin Management Banner */}
+            {isAuthorized && (
+                <div className="mb-8 bg-primary/10 border border-primary/20 rounded-[2rem] p-6 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl shadow-primary/5">
+                    <div className="flex items-center gap-4 text-center sm:text-left">
+                        <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-slate-900 shrink-0">
+                            <span className="material-symbols-outlined font-black">admin_panel_settings</span>
+                        </div>
+                        <div>
+                            <h4 className="text-lg font-black text-slate-900 dark:text-white leading-tight">You Manage This Listing</h4>
+                            <p className="text-sm text-slate-500 font-medium">As the owner, you have full control over this business profile.</p>
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-3 w-full sm:w-auto">
                         <Link
                             to={`/edit-business/${business._id}`}
-                            className="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 px-4 py-1.5 rounded-lg text-sm font-bold flex items-center gap-1 transition-colors"
+                            className="flex-1 sm:flex-none bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-6 py-3 rounded-2xl text-sm font-black flex items-center justify-center gap-2 hover:scale-105 active:scale-95 transition-all shadow-xl"
                         >
-                            <span className="material-symbols-outlined text-sm">edit</span>
-                            Edit
+                            <span className="material-symbols-outlined text-lg">edit</span>
+                            Edit Details
                         </Link>
-                        <button
-                            onClick={handleDelete}
-                            className="bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/40 text-red-600 dark:text-red-400 px-4 py-1.5 rounded-lg text-sm font-bold flex items-center gap-1 transition-colors"
-                        >
-                            <span className="material-symbols-outlined text-sm">delete</span>
-                            Delete
-                        </button>
+                        {user?.role === 'admin' && (
+                            <button
+                                onClick={handleDelete}
+                                className="flex-1 sm:flex-none bg-red-500/10 hover:bg-red-500/20 text-red-600 px-6 py-3 rounded-2xl text-sm font-black flex items-center justify-center gap-2 transition-all"
+                            >
+                                <span className="material-symbols-outlined text-lg">delete</span>
+                                Delete
+                            </button>
+                        )}
                     </div>
-                )}
+                </div>
+            )}
+
+            {/* Breadcrumbs */}
+            <nav className="flex items-center justify-between mb-8">
+                <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400 flex-wrap">
+                    <Link to="/" className="hover:text-primary transition-colors">Home</Link>
+                    <span className="material-symbols-outlined text-xs font-black">chevron_right</span>
+                    <Link to="/directory" className="hover:text-primary transition-colors">Directory</Link>
+                    {business.category && (
+                        <>
+                            <span className="material-symbols-outlined text-xs font-black">chevron_right</span>
+                            <span className="text-primary">{business.category}</span>
+                        </>
+                    )}
+                    <span className="material-symbols-outlined text-xs font-black">chevron_right</span>
+                    <span className="text-slate-900 dark:text-slate-200 truncate max-w-[120px]">{business.name}</span>
+                </div>
             </nav>
 
             {/* Hero Section */}
@@ -247,7 +262,6 @@ const BusinessDetails = () => {
                     <section className="bg-white dark:bg-slate-900 rounded-xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
                         <div className="flex items-center justify-between mb-8">
                             <h3 className="text-xl font-bold">Reviews & Ratings</h3>
-                            <button className="bg-primary hover:bg-primary/90 text-slate-900 px-4 py-2 rounded-lg text-sm font-bold">Write a Review</button>
                         </div>
                         {business.reviews > 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
@@ -276,6 +290,10 @@ const BusinessDetails = () => {
                             </div>
                         )}
                     </section>
+
+                    {/* Bottom Inline AdBanner for Individual Page */}
+                    <AdBanner page="BusinessDetails" />
+
                 </div>
 
                 {/* Sidebar */}
@@ -325,7 +343,7 @@ const BusinessDetails = () => {
                         </div>
 
                         {/* Ad Banner — Sidebar */}
-                        <AdBanner variant="sidebar" />
+                        {/* AdBanner Removed from Sidebar to show only one ad */}
                     </div>
                 </div>
             </div>
