@@ -23,10 +23,17 @@ const { categories, businesses } = require('./data');
 let mongoServer;
 const connectDB = async () => {
     try {
-        mongoServer = await MongoMemoryServer.create();
-        const uri = mongoServer.getUri();
+        let uri = process.env.MONGO_URI;
+        if (!uri) {
+            mongoServer = await MongoMemoryServer.create();
+            uri = mongoServer.getUri();
+            console.log(`Using in-memory MongoDB at ${uri}`);
+        } else {
+            console.log(`Connecting to provided MongoDB URI`);
+        }
+        
         await mongoose.connect(uri);
-        console.log(`Connected to in-memory MongoDB at ${uri}`);
+        console.log(`Successfully connected to MongoDB`);
 
         const count = await Category.countDocuments();
         if (count === 0) {
