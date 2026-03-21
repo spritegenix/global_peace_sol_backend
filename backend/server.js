@@ -31,7 +31,7 @@ const connectDB = async () => {
         } else {
             console.log(`Connecting to provided MongoDB URI`);
         }
-        
+
         await mongoose.connect(uri);
         console.log(`Successfully connected to MongoDB`);
 

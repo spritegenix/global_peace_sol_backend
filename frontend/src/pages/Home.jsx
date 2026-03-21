@@ -293,7 +293,7 @@ const Home = () => {
 
                     {/* Ad Banner */}
                     <section className="mx-auto max-w-7xl px-6 pb-6">
-                        <AdBanner />
+                        <AdBanner page="Home" />
                     </section>
 
                     {/* Featured Businesses */}
