@@ -1,30 +1,20 @@
-// Initial mock data for the Yellow Pages application
-
+// ✅ Updated Categories (Mental Health Based)
 const categories = [
-    { id: 1, icon: 'restaurant', name: 'Restaurants', count: '1,420 businesses' },
-    { id: 2, icon: 'directions_car', name: 'Automotive', count: '840 businesses' },
-    { id: 3, icon: 'home_repair_service', name: 'Home Repair', count: '2,105 businesses' },
-    { id: 4, icon: 'content_cut', name: 'Beauty & Spa', count: '642 businesses' },
-    { id: 5, icon: 'medical_services', name: 'Health', count: '931 businesses' },
-    { id: 6, icon: 'shopping_bag', name: 'Shopping', count: '1,850 businesses' },
-    { id: 7, icon: 'nightlife', name: 'Nightlife', count: '245 businesses' },
-    { id: 8, icon: 'school', name: 'Education', count: '112 businesses' },
-    { id: 9, icon: 'home', name: 'Real Estate', count: '520 businesses' },
-    { id: 10, icon: 'business_center', name: 'Professional Services', count: '1,240 businesses' },
-    { id: 11, icon: 'pets', name: 'Pets & Animals', count: '315 businesses' },
-    { id: 12, icon: 'hotel', name: 'Travel & Hotels', count: '420 businesses' },
-    { id: 13, icon: 'event', name: 'Events & Wedding', count: '430 businesses' },
-    { id: 14, icon: 'local_hospital', name: 'Hospitals', count: '150 businesses' },
-    { id: 15, icon: 'electric_bolt', name: 'Electricians', count: '280 businesses' },
-    { id: 16, icon: 'fitness_center', name: 'Gyms', count: '195 businesses' },
-    { id: 17, icon: 'content_cut', name: 'Salons', count: '410 businesses' },
+    { id: 1, icon: 'psychology', name: 'Mental Health & Therapy', count: '1,420 businesses' },
+    { id: 2, icon: 'family_restroom', name: 'Relationship & Family Support', count: '840 businesses' },
+    { id: 3, icon: 'self_improvement', name: 'Mindfulness & Inner Growth', count: '620 businesses' },
+    { id: 4, icon: 'work', name: 'Career & Life Stress Support', count: '510 businesses' },
+    { id: 5, icon: 'groups', name: 'NGO & Social Support Services', count: '300 businesses' },
+    { id: 6, icon: 'handshake', name: 'Conflict Resolution & Mediation', count: '210 businesses' },
+    { id: 7, icon: 'security', name: 'Cyber Safety & Crisis Help', count: '150 businesses' }
 ];
 
+// ✅ Businesses Data (Fixed category names)
 let businesses = [
     {
         id: 1,
         name: 'Elite Flow Plumbing Solutions',
-        category: 'Home Repair',
+        category: 'Career & Life Stress Support',
         rating: 4.9,
         reviews: 128,
         address: '123 Industrial Way, Springfield, IL',
@@ -32,90 +22,95 @@ let businesses = [
         status: 'Open until 8:00 PM',
         isVerified: true,
         isFeatured: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAvihKmFUiQj_tMoo5zQobck0dMS5XRZ9v7CwfqdiaspxWUtlMkMJ98LNTWTZCj6ShE4HK38fYNrE4QLpnFPt1YYFEN9AUaP5RV6zvLVsSoYP7Y5NlvFlfDc2Kz9xmJs2dUJgTdk-VjhoZGqoUFhD4uLw_fNXY_q08MWaXdWFv0pZz8dwL5ExQEZeZ-sHzfS_BG3zQKfFpFtAiGI6-qSaymcuFQHPed3TyyJoKfy9eykuCsGdzWVjzBCpr2JTZSu_ZzWoiVAdXt9PQ'
+        image: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952'
     },
     {
         id: 2,
-        name: 'The Golden Fork Bistro',
-        category: 'Restaurants',
+        name: 'MindCare Therapy Center',
+        category: 'Mental Health & Therapy',
         rating: 4.7,
         reviews: 342,
-        address: '892 Culinary Blvd, Springfield, IL',
+        address: '892 Wellness Blvd',
         phone: '(555) 987-6543',
-        status: 'Closes in 20 mins',
-        isVerified: false,
+        status: 'Open Now',
+        isVerified: true,
         isFeatured: true,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBYHn-EhD08DuFsHADNjdV8ypdimGNgowl4yHpxznPIMDSXWO60pQzDD3y3ol5rbsc-Cz7tA_Zybz1L3cFr8worXz0crUL-jaDZ-ZemMXY_Mhj7ng0wFp5H7vGNKK24RQ8WmgedLPCjTw8yjqCTpMsdX-iyTNJww7-s1E2wE1wWLFFMPVJUp48CW-dKnNa8I15IKpt3gBuqPweDEox9bmONMA_mPa9IxKryWAt0Y7Ivm8FlCkcho38i76lVbQE72UgM8Bw-0_YlMFA'
+        image: 'https://images.unsplash.com/photo-1588776814546-ec7e7c3d55b2'
     },
     {
         id: 3,
-        name: 'Precision Auto Works',
-        category: 'Automotive',
+        name: 'Family Support Hub',
+        category: 'Relationship & Family Support',
         rating: 4.5,
         reviews: 89,
-        address: '44 Mechanic Ln, Springfield, IL',
+        address: '44 Harmony Street',
         phone: '(555) 444-2222',
-        status: '15+ years in business',
+        status: '15+ years experience',
         isVerified: true,
         isFeatured: true,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB29duBT3rbvPMCnkw9JREZ1SANwk6gDW_Cr7M2zDS3bNuhDHee8Uw19TPMrDJcZpzHTEaDKMpZ4OlW4JzELPWFsnukkoYJaxImEN0Lrb2MMtzI59d29FQW46HOq7i8CEZfe41fq_MMKdhPiA3e-aVFRogEsSBlgGnskOa-nQozidLDf81gBXCzECczm90jLF0QXTlIvTJhVbUomjvsni2M1w1kRSyu6VQP0Or39gxRHkmVS-uSyB7x56Bonn5B8TOlh7G1P2L9jfE'
+        image: 'https://images.unsplash.com/photo-1526256262350-7da7584cf5eb'
     },
     {
         id: 4,
-        name: 'Le Bistro Modern',
-        category: 'Restaurants',
+        name: 'Peace Mind Meditation Center',
+        category: 'Mindfulness & Inner Growth',
         rating: 4.9,
         reviews: 1200,
-        address: '245 West 42nd St, NY',
+        address: '245 Calm Street',
         phone: '(555) 111-2345',
-        status: 'Open until 11:00 PM',
+        status: 'Open until 9 PM',
         isVerified: true,
         isFeatured: true,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCFc9IoQYi3ovPc4bEfBWbnep6x__EpzhCMgKvukBcW6bvfPzi4QW4nJhZHcD4HWOKSqEQO7R-4EBrX7QEG5ZowHPQIGctUt3AC-H_iz0FX1yCq2WGyI9EvIB74Gwqt6FoxCKlrSrFw5pbO520PkQCRGQqe7ukP0m_a4INS_5-v9bya1lsD3d3t1mrlyJpocKtF8G7cjgFgEMs5oP052CI5XS2ZYMFEV2gCcUxywKs8o6AWDP_PlyKudicwZtNBJ6bteTtcotIZuJA'
+        image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773'
     },
     {
         id: 5,
-        name: 'Iron Core Gym',
-        category: 'Health',
+        name: 'Career Balance Coaching',
+        category: 'Career & Life Stress Support',
         rating: 4.7,
         reviews: 850,
-        address: '89 Broadway, Brooklyn, NY',
+        address: '89 Success Road',
         phone: '(555) 222-3456',
-        status: '24/7 Access',
+        status: 'Online Sessions Available',
         isVerified: true,
         isFeatured: true,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDJurMLLmR9-1Tk2Z_H93tm-zfR9O21ySav-ph7_yk90stgoHadyN5Zke5P2RDi8j87X0QQpI-SiyDpIoA_n6dxq4Xoof44GyDLRaIeKsq9LNhTiESBkHOUBe44ohAbxGahOi--q70p3MbcbGc2be2hKyR1UI-qezEY_ymhd6NfQK62vSxyKNlo92XYrp2ltb6whXql5fVWMzmFlg-m9YJcZAdJlY_dJlWRITobIu7AGea_SbdMb8j4aBUDtz3fmli6Av6v8TADVUc'
+        image: 'https://images.unsplash.com/photo-1552664730-d307ca884978'
     },
     {
         id: 6,
-        name: 'Velvet Cut Studio',
-        category: 'Beauty & Spa',
+        name: 'SafeNet Cyber Help',
+        category: 'Cyber Safety & Crisis Help',
         rating: 5.0,
         reviews: 520,
-        address: '52 Madison Ave, NY',
+        address: '52 Security Lane',
         phone: '(555) 333-4567',
-        status: 'Booking Available',
+        status: '24/7 Support',
         isVerified: true,
         isFeatured: false,
-        image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCnho9OsC-lv9BU6e7qJTr1yok-3ttHCc1sezozaRTZae-6rQFha0bmd6LYEYxB40pDFulicfd5gwGmOe1LB2QB0FDTQ65dpI2JCbhGqSuZpMvkb1wQf5drsqOWHSD3CwsimowNlPxb8ReQnkZHXB6Eh8gpoL4BszeXFlkGKhXy5MGdYZeVqaTZ4qbrw0La7oKbuMusf5cA6zQ_zI9kgW9B2czdWIF-bexZXuMcszrDW5YcuTz89O_MvgNvN_Vsvoq6hbUEOIhJlTg'
+        image: 'https://images.unsplash.com/photo-1510511459019-5dda7724fd87'
     }
 ];
 
+// ✅ Add Business Function
+const addBusiness = (business) => {
+    const newBusiness = {
+        ...business,
+        id: businesses.length > 0 ? Math.max(...businesses.map(b => b.id)) + 1 : 1,
+        rating: 0,
+        reviews: 0,
+        status: 'Newly Added',
+        isVerified: false,
+        isFeatured: false,
+        image: business.image || 'https://images.unsplash.com/photo-1497366216548-37526070297c'
+    };
+
+    businesses.push(newBusiness);
+    return newBusiness;
+};
+
+// ✅ Export
 module.exports = {
     categories,
     businesses,
-    addBusiness: (business) => {
-        const newBusiness = {
-            ...business,
-            id: businesses.length > 0 ? Math.max(...businesses.map(b => b.id)) + 1 : 1,
-            rating: 0,
-            reviews: 0,
-            status: 'Newly Added',
-            isVerified: false,
-            isFeatured: false,
-            image: business.image || 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=800'
-        };
-        businesses.push(newBusiness);
-        return newBusiness;
-    }
-};
+    addBusiness
+};

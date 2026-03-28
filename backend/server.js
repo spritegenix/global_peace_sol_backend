@@ -35,29 +35,61 @@ const connectDB = async () => {
         await mongoose.connect(uri);
         console.log(`Successfully connected to MongoDB`);
 
-        const count = await Category.countDocuments();
-        if (count === 0) {
-            console.log("Database empty. Auto-seeding default data into memory...");
+        // --- DB MIGRATION: Replace Old Category Names ---
+        const categoryMap = {
+            "Mental Health & Therapys": "Mental Health & Therapy",
+            "Automotive": "Relationship & Family Support",
+            "Home Repair": "Career & Life Stress Support",
+            "Beauty & Spa": "NGO & Social Support Services",
+            "Health": "Conflict Resolution & Mediation",
+            "Shopping": "Cyber Safety & Crisis Help",
+            "Nightlife": "Mindfulness & Inner Growth"
+        };
+        
+        console.log("Running category migrations on businesses...");
+        for (const [oldName, newName] of Object.entries(categoryMap)) {
+            // Update businesses using the old category name
+            const updateRes = await Business.updateMany(
+                { category: new RegExp(`^${oldName}$`, 'i') }, 
+                { $set: { category: newName } }
+            );
+            if (updateRes.modifiedCount > 0) {
+                console.log(`Migrated ${updateRes.modifiedCount} businesses from '${oldName}' to '${newName}'`);
+            }
+        }
 
-            // Create a default admin user
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash('admin123', salt);
-            const adminUser = new User({
-                name: 'Admin User',
-                email: 'admin@yellowwebsite.com',
-                password: hashedPassword,
-                role: 'admin'
-            });
-            await adminUser.save();
-            console.log('Default admin user created: admin@yellowwebsite.com / admin123');
+        // Always synchronize categories with the core list in data.js
+        console.log("Synchronizing categories...");
+        await Category.deleteMany({});
+        const cleanCategories = categories.map(({ id, ...rest }) => rest);
+        await Category.insertMany(cleanCategories);
+        console.log('Categories synchronized.');
 
-            const cleanCategories = categories.map(({ id, ...rest }) => rest);
+        const businessCount = await Business.countDocuments();
+        if (businessCount === 0) {
+            console.log("Seeding default businesses...");
+            // Create a default admin user if it doesn't exist
+            let adminUser = await User.findOne({ email: 'admin@yellowwebsite.com' });
+            if (!adminUser) {
+                const salt = await bcrypt.genSalt(10);
+                const hashedPassword = await bcrypt.hash('admin123', salt);
+                adminUser = new User({
+                    name: 'Admin User',
+                    email: 'admin@yellowwebsite.com',
+                    password: hashedPassword,
+                    role: 'admin'
+                });
+                await adminUser.save();
+                console.log('Default admin user created.');
+            }
+
             const cleanBusinesses = businesses.map(({ id, ...rest }) => {
-                rest.owner = adminUser._id; // Assign to admin by default
+                rest.owner = adminUser._id;
                 return rest;
             });
-            await Category.insertMany(cleanCategories);
             await Business.insertMany(cleanBusinesses);
+            console.log('Default businesses seeded.');
+        }
 
             // Seed default Ads
             await Ad.insertMany([
@@ -92,7 +124,6 @@ const connectDB = async () => {
             ]);
 
             console.log('In-memory database successfully seeded!');
-        }
     } catch (err) {
         console.error('MongoDB connection error:', err);
     }
